@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 98%;
+  --foreground: 0 0% 10%;
+  --muted: 0 0% 95%;
+  --muted-foreground: 0 0% 45%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --primary: 345 60% 30%; /* VJMZ-FM Burgundy */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 345 50% 25%; /* VJMZ-FM Dark Burgundy */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 345 35% 95%; /* VJMZ-FM Light Burgundy */
+  --accent-foreground: 345 60% 30%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 345 60% 30%; /* Match primary */
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 0 0% 3%;
+  --foreground: 0 0% 98%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 65%;
+  --popover: 0 0% 5%;
+  --popover-foreground: 0 0% 98%;
+  --card: 0 0% 7%;
+  --card-foreground: 0 0% 98%;
+  --border: 0 0% 15%;
+  --input: 0 0% 15%;
+  --primary: 345 65% 35%; /* VJMZ-FM Burgundy - brighter in dark mode */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 345 55% 25%; /* VJMZ-FM Dark Burgundy */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 345 40% 20%; /* VJMZ-FM Deep Burgundy for dark mode */
+  --accent-foreground: 345 60% 90%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 345 65% 35%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Custom styles for the app */
+.station-card-image {
+  position: relative;
+}
+
+.station-card-image::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+.live-badge {
+  @apply bg-secondary text-white text-xs font-semibold px-2 py-1 rounded z-10;
+}
+
+.category-icon {
+  @apply p-3 rounded-full mb-3;
+}
