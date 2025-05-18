@@ -1,43 +1,70 @@
-
+<!-- VJMZ-FM Expanded Homepage with Auth Pages -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VJMZ-FM</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" cont
+ent="width=device-width, initial-scale=1.0">
+  <title>VJMZ-FM | Your Jamz, Your Station</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="header">
-        <img src="assets/logo-black.jpg" alt="VJMZ-FM Logo" class="logo">
-    </header>
+  <header class="header">
+    <img src="assets/logo-black.jpg" alt="VJMZ-FM Logo" class="logo">
+  </header>
 
-    <main class="main-content">
-        <h1>Welcome to VJMZ-FM</h1>
-        <p>Your Jamz, Your Station - Internet's #1 JAM'N STATION</p>
+  <main class="main-content">
+    <h1>Welcome to VJMZ-FM</h1>
+    <p>Your Jamz, Your Station - Internet's #1 JAM'N STATION</p>
 
-        <section class="features">
-            <div class="feature">
-                <h2>Listen Live</h2>
-                <p>Stream your favorite hits and discover new jamz, 24/7.</p>
-            </div>
-            <div class="feature">
-                <h2>DJ Schedule</h2>
-                <p>Stay updated with our exciting DJ lineup and showtimes.</p>
-            </div>
-            <div class="feature">
-                <h2>Get in Touch</h2>
-                <p>Questions? Feedback? Contact us anytime.</p>
-            </div>
-        </section>
-    </main>
-res.send("VJMZ-FM is live!");
+    <section class="features">
+      <div class="feature">
+        <h2>🎧 Listen Live</h2>
+        <audio controls src="/stream.mp3">Your browser does not support streaming audio.</audio>
+      </div>
 
-    <footer class="footer">
-        &copy; 2025 VJMZ-FM.COM – All rights reserved.
-    </footer>
+      <div class="feature">
+        <h2>📝 Submit Your Music</h2>
+        <form action="#" method="POST" enctype="multipart/form-data">
+          <input type="text" name="artist" placeholder="Artist Name" required><br>
+          <input type="text" name="title" placeholder="Song Title" required><br>
+          <input type="email" name="email" placeholder="Your Email" required><br>
+          <input type="file" name="audio" accept="audio/*" required><br>
+          <button type="submit">Submit for Airplay</button>
+        </form>
+      </div>
+
+      <div class="feature">
+        <h2>📢 Advertise With Us</h2>
+        <p><a href="assets/VJMZ-FM_RateCard_2025.pdf" target="_blank">Download our Rate Card (PDF)</a></p>
+        <form action="#" method="POST">
+          <input type="text" name="business" placeholder="Business Name" required><br>
+          <input type="email" name="email" placeholder="Contact Email" required><br>
+          <textarea name="message" placeholder="Tell us about your campaign goals"></textarea><br>
+          <button type="submit">Request Advertising Info</button>
+        </form>
+      </div>
+
+      <div class="feature">
+        <h2>👥 Listener Account</h2>
+        <p><a href="login.html">Sign In</a> or <a href="signup.html">Create an Account</a></p>
+      </div>
+
+      <div class="feature">
+        <h2>📅 DJ Schedule</h2>
+        <ul>
+          <li>Mon-Fri: DJ Smooth – 9 AM to 1 PM</li>
+          <li>Sat: DJ Lady V – 12 PM to 6 PM</li>
+          <li>Sun: The Gospel Jam – 7 AM to 10 AM</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    &copy; 2025 VJMZ-FM.COM – All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Use</a>
+  </footer>
 </body>
-</html>git add .
-git commit -m "Serve frontend from public folder"
-git push
+</html>
+
 
