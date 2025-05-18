@@ -73,3 +73,18 @@ app.use((req, res, next) => {
   });
 })();
 res.send("VJMZ-FM is live!");
+import express from 'express';
+import path from 'path';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.static('public'));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('public', 'index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
