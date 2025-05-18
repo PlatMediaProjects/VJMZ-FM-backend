@@ -1,71 +1,74 @@
-<!-- VJMZ-FM Expanded Homepage with Auth Pages -->
+<!-- VJMZ-FM Modern Homepage with Tailwind CSS -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" cont
-ent="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VJMZ-FM | Your Jamz, Your Station</title>
-  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="/favicon.ico">
 </head>
-<body>
-  <header class="header">
-    <img src="assets/logo-black.jpg" alt="VJMZ-FM Logo" class="logo">
+<body class="bg-black text-white font-sans">
+  <header class="bg-gradient-to-r from-black via-red-900 to-black p-6 text-center">
+    <img src="https://vjmz-fm.onrender.com/assets/logo-black.jpg" alt="VJMZ-FM Logo" class="mx-auto w-48 mb-4">
+    <h1 class="text-4xl font-bold">Welcome to VJMZ-FM</h1>
+    <p class="text-xl mt-2">Your Jamz, Your Station - Internet's #1 JAM'N STATION</p>
   </header>
 
-  <main class="main-content">
-    <h1>Welcome to VJMZ-FM</h1>
-    <p>Your Jamz, Your Station - Internet's #1 JAM'N STATION</p>
+  <main class="p-6 space-y-12">
+    <section class="bg-white text-black rounded-lg p-6 shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4">🎧 Listen Live</h2>
+      <audio controls class="w-full">
+        <source src="/stream.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </section>
 
-    <section class="features">
-      <div class="feature">
-        <h2>🎧 Listen Live</h2>
-        <audio controls src="/stream.mp3">Your browser does not support streaming audio.</audio>
-      </div>
-
-      <div class="feature">
-        <h2>📝 Submit Your Music</h2>
-        <form action="#" method="POST" enctype="multipart/form-data">
-          <input type="text" name="artist" placeholder="Artist Name" required><br>
-          <input type="text" name="title" placeholder="Song Title" required><br>
-          <input type="email" name="email" placeholder="Your Email" required><br>
-          <input type="file" name="audio" accept="audio/*" required><br>
-          <button type="submit">Submit for Airplay</button>
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-gray-900 p-6 rounded-lg border border-red-700">
+        <h2 class="text-xl font-bold text-red-500 mb-4">📝 Submit Your Music</h2>
+        <form action="#" method="POST" enctype="multipart/form-data" class="space-y-3">
+          <input type="text" name="artist" placeholder="Artist Name" required class="w-full p-2 rounded">
+          <input type="text" name="title" placeholder="Song Title" required class="w-full p-2 rounded">
+          <input type="email" name="email" placeholder="Your Email" required class="w-full p-2 rounded">
+          <input type="file" name="audio" accept="audio/*" required class="w-full p-2">
+          <button type="submit" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded">Submit for Airplay</button>
         </form>
       </div>
 
-      <div class="feature">
-        <h2>📢 Advertise With Us</h2>
-        <p><a href="assets/VJMZ-FM_RateCard_2025.pdf" target="_blank">Download our Rate Card (PDF)</a></p>
-        <form action="#" method="POST">
-          <input type="text" name="business" placeholder="Business Name" required><br>
-          <input type="email" name="email" placeholder="Contact Email" required><br>
-          <textarea name="message" placeholder="Tell us about your campaign goals"></textarea><br>
-          <button type="submit">Request Advertising Info</button>
+      <div class="bg-gray-900 p-6 rounded-lg border border-red-700">
+        <h2 class="text-xl font-bold text-red-500 mb-4">📢 Advertise With Us</h2>
+        <p><a href="assets/VJMZ-FM_RateCard_2025.pdf" class="underline text-white" target="_blank">Download our Rate Card (PDF)</a></p>
+        <form action="#" method="POST" class="space-y-3 mt-4">
+          <input type="text" name="business" placeholder="Business Name" required class="w-full p-2 rounded">
+          <input type="email" name="email" placeholder="Contact Email" required class="w-full p-2 rounded">
+          <textarea name="message" placeholder="Tell us about your campaign goals" class="w-full p-2 rounded"></textarea>
+          <button type="submit" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded">Request Info</button>
         </form>
       </div>
+    </section>
 
-      <div class="feature">
-        <h2>👥 Listener Account</h2>
-        <p><a href="login.html">Sign In</a> or <a href="signup.html">Create an Account</a></p>
-      </div>
+    <section class="bg-white text-black p-6 rounded-lg shadow-lg">
+      <h2 class="text-xl font-bold mb-2">👥 Listener Account</h2>
+      <p><a href="login.html" class="text-blue-700 underline">Sign In</a> or <a href="signup.html" class="text-blue-700 underline">Create an Account</a></p>
+    </section>
 
-      <div class="feature">
-        <h2>📅 DJ Schedule</h2>
-        <ul>
-          <li>Mon-Fri: DJ Smooth – 9 AM to 1 PM</li>
-          <li>Sat: DJ Lady V – 12 PM to 6 PM</li>
-          <li>Sun: The Gospel Jam – 7 AM to 10 AM</li>
-        </ul>
-      </div>
+    <section class="bg-gray-900 p-6 rounded-lg border border-red-700">
+      <h2 class="text-xl font-bold text-red-500 mb-4">📅 DJ Schedule</h2>
+      <ul class="list-disc pl-6">
+        <li>Mon-Fri: DJ Smooth – 9 AM to 1 PM</li>
+        <li>Sat: DJ Lady V – 12 PM to 6 PM</li>
+        <li>Sun: The Gospel Jam – 7 AM to 10 AM</li>
+      </ul>
     </section>
   </main>
 
-  <footer class="footer">
-    &copy; 2025 VJMZ-FM.COM – All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Use</a>
+  <footer class="bg-black text-center py-4 text-sm border-t border-red-700">
+    &copy; 2025 VJMZ-FM.COM – All rights reserved. | <a href="privacy.html" class="underline">Privacy Policy</a> | <a href="terms.html" class="underline">Terms of Use</a>
   </footer>
 </body>
 </html>
+
 
 
 
