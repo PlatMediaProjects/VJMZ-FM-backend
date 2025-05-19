@@ -23,19 +23,21 @@
 <body>
 
 <!-- ⬇️ PASTE the header section right here -->
-<header><!-- Header Section with Burgundy and Black Infused Background and Left-Aligned Logo + Slideshow -->
-<header style="background: linear-gradient(to right, #800020, #000000); padding: 20px; display: flex; align-items: center; justify-content: space-between;">
-  <img src="VJMZ-FM Logo 1.jpg" 
-       alt="VJMZ-FM.COM Internet’s #1 JAM’N STATION" 
-       style="height: 80px; width: auto;" />
+<header><!-- Header Section with Burgundy and Black Infused Background and Left-Aligned Full-Size Logo + Slideshow -->
+<div style="border: 8px solid #800020; background: #000; min-height: 100vh;">
+  <header style="background: linear-gradient(to right, #800020, #000000); padding: 30px; display: flex; align-items: center; justify-content: space-between;">
+    <img src="VJMZ-FM Logo 1.jpg" 
+         alt="VJMZ-FM.COM Internet’s #1 JAM’N STATION" 
+         style="height: 120px; width: auto;" />
 
-  <!-- Slideshow container with stock placeholders -->
-  <div class="slideshow-container" style="flex: 1; margin-left: 20px; overflow: hidden; border-radius: 12px;">
-    <img class="slide" src="https://source.unsplash.com/800x200/?concert,stage" style="width:100%; display:none; border-radius: 12px;" />
-    <img class="slide" src="https://source.unsplash.com/800x200/?music,dj" style="width:100%; display:none; border-radius: 12px;" />
-    <img class="slide" src="https://source.unsplash.com/800x200/?radio,studio" style="width:100%; display:none; border-radius: 12px;" />
-  </div>
-</header>
+    <!-- Slideshow container with stock placeholders -->
+    <div class="slideshow-container" style="flex: 1; margin-left: 30px; overflow: hidden; border-radius: 12px;">
+      <img class="slide" src="https://source.unsplash.com/1000x250/?concert,stage" style="width:100%; display:block; border-radius: 12px;" />
+      <img class="slide" src="https://source.unsplash.com/1000x250/?music,dj" style="width:100%; display:none; border-radius: 12px;" />
+      <img class="slide" src="https://source.unsplash.com/1000x250/?radio,studio" style="width:100%; display:none; border-radius: 12px;" />
+    </div>
+  </header>
+</div>
 
 <script>
   // Simple slideshow script
@@ -49,6 +51,10 @@
     if (slideIndex > slides.length) {slideIndex = 1;}
     slides[slideIndex - 1].style.display = "block";
     setTimeout(showSlides, 3000); // Change image every 3 seconds
+  };
+  document.addEventListener("DOMContentLoaded", showSlides);
+</script>
+
   };
   document.addEventListener("DOMContentLoaded", showSlides);
 </script>
