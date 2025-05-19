@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VJMZ-FM | Internet’s #1 JAM’N STATION</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .page-wrapper {
+      border: 8px solid #800020;
+      min-height: 100vh;
+      background: #000;
+    }
+
+    header {
+      background: linear-gradient(to right, #800020, #000000);
+      padding: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header img {
+      height: 140px;
+      width: auto;
+      margin-right: 30px;
+    }
+
+    .slideshow-container {
+      flex: 1;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .slide {
+      width: 100%;
+      display: none;
+      border-radius: 12px;
+    }
+
+    .slide:first-child {
+      display: block;
+    }
+
+    main {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    footer {
+      background-color: #111;
+      color: #aaa;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header>
+      <img src="VJMZ-FM Logo 1.jpg" alt="VJMZ-FM.COM Internet’s #1 JAM’N STATION" />
+
+      <div class="slideshow-container">
+        <img class="slide" src="https://source.unsplash.com/1000x250/?concert,stage" alt="Concert Stage" />
+        <img class="slide" src="https://source.unsplash.com/1000x250/?music,dj" alt="Music DJ" />
+        <img class="slide" src="https://source.unsplash.com/1000x250/?radio,studio" alt="Radio Studio" />
+      </div>
+    </header>
+
+    <main>
+      <h1>Welcome to VJMZ-FM</h1>
+      <p>Your 24/7 source for jam’n music, DJ broadcasts, and live personalities that keep the energy flowing. Stay tuned and spread the vibe!</p>
+    </main>
+
+    <footer>
+      &copy; 2025 VJMZ-FM.COM — All Rights Reserved.
+    </footer>
+  </div>
+
+  <script>
+    let slideIndex = 0;
+    const showSlides = () => {
+      const slides = document.getElementsByClassName("slide");
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+      }
+      slideIndex++;
+      if (slideIndex > slides.length) {slideIndex = 1;}
+      slides[slideIndex - 1].style.display = "block";
+      setTimeout(showSlides, 3000);
+    };
+    document.addEventListener("DOMContentLoaded", showSlides);
+  </script>
+</body>
+</html>
 
