@@ -23,19 +23,36 @@
 <body>
 
 <!-- ⬇️ PASTE the header section right here -->
-<header<!-- Header Section with Burgundy and Black Infused Background and Slideshow -->
-<header style="background: linear-gradient(to right, #800020, #000000); padding: 40px 0; text-align: center;">
-  <div style="max-width: 800px; margin: 0 auto; position: relative; overflow: hidden; border-radius: 12px;">
-    <img src="VJMZ-FM Logo 1.jpg" 
-         alt="VJMZ-FM.COM Internet’s #1 JAM’N STATION" 
-         style="max-width: 100%; width: 400px; height: auto; display: block; margin: 0 auto;" />
-    <!-- Slideshow container -->
-    <div class="slideshow-container" style="margin-top: 20px;">
-      <img class="slide" src="slide1.jpg" style="width:100%; display:none; border-radius: 12px;" />
-      <img class="slide" src="slide2.jpg" style="width:100%; display:none; border-radius: 12px;" />
-      <img class="slide" src="slide3.jpg" style="width:100%; display:none; border-radius: 12px;" />
-    </div>
+<header><!-- Header Section with Burgundy and Black Infused Background and Left-Aligned Logo + Slideshow -->
+<header style="background: linear-gradient(to right, #800020, #000000); padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+  <img src="VJMZ-FM Logo 1.jpg" 
+       alt="VJMZ-FM.COM Internet’s #1 JAM’N STATION" 
+       style="height: 80px; width: auto;" />
+
+  <!-- Slideshow container with stock placeholders -->
+  <div class="slideshow-container" style="flex: 1; margin-left: 20px; overflow: hidden; border-radius: 12px;">
+    <img class="slide" src="https://source.unsplash.com/800x200/?concert,stage" style="width:100%; display:none; border-radius: 12px;" />
+    <img class="slide" src="https://source.unsplash.com/800x200/?music,dj" style="width:100%; display:none; border-radius: 12px;" />
+    <img class="slide" src="https://source.unsplash.com/800x200/?radio,studio" style="width:100%; display:none; border-radius: 12px;" />
   </div>
+</header>
+
+<script>
+  // Simple slideshow script
+  let slideIndex = 0;
+  const showSlides = () => {
+    const slides = document.getElementsByClassName("slide");
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) {slideIndex = 1;}
+    slides[slideIndex - 1].style.display = "block";
+    setTimeout(showSlides, 3000); // Change image every 3 seconds
+  };
+  document.addEventListener("DOMContentLoaded", showSlides);
+</script>
+
 </header>
 
 <script>
