@@ -214,9 +214,22 @@
 
     <section style="text-align: center; padding: 2rem;">
   <h2 style="margin-bottom: 1rem;">🎧 Now Streaming Live on VJMZ-FM</h2>
-  <p style="color: #bbb; margin-bottom: 1rem;">If the player doesn't respond, click below to launch in a new tab.</p>
-  <a href="http://cast3.my-control-panel.com:7535/;stream.mp3" target="_blank" style="display:inline-block; background:#800020; color:white; padding:1rem 2rem; border-radius:10px; font-weight:bold; text-decoration:none;">
+  <p style="color: #bbb; margin-bottom: 1rem;">
+    You can listen right here or click below to open the player in a new tab.
+  </p>
+
+  <!-- Mini Audio Player -->
+  <audio controls style="width: 100%; max-width: 500px; margin: 0 auto 1rem; display: block; border: 4px solid #800020; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);">
+    <source src="/stream" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Launch Player as fallback -->
+  <a href="/stream" target="_blank" style="display:inline-block; background:#800020; color:white; padding:1rem 2rem; border-radius:10px; font-weight:bold; text-decoration:none;">
     ▶ Launch Player
+  </a>
+</section>
+
   </a>
 </section>
 
