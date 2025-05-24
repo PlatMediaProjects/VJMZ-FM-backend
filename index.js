@@ -25,6 +25,13 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false } // required for Render-hosted PostgreSQL
+});
 
 
 
