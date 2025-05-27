@@ -216,23 +216,14 @@
   <h2 style="margin-bottom: 1rem;">🎧 Now Streaming Live on VJMZ-FM</h2>
   <p style="color: #bbb; margin-bottom: 1rem;">
     You can listen right here or launch the stream in a new tab
-<!-- Your player embed starts here -->
-<div style="text-align:center; margin-top: 1rem;">
-  <iframe src="https://your-custom-player-url" width="300" height="60" frameborder="0" allow="autoplay"></iframe>
-</div>
-
-</div>
-<script>
-  window.addEventListener('load', function() {
-    const player = document.getElementById('vjmzPlayer');
-    setTimeout(() => {
-      player.style.opacity = '1';
-      player.style.transform = 'translateY(0)';
-    }, 1000);
-  });
-</script>
-
-  </a>
+<!-- Mini Audio Player for VJMZ-FM -->
+<section style="text-align: center; padding: 1.5rem;">
+  <h3 style="margin-bottom: 0.5rem;">🎵 Live on VJMZ-FM</h3>
+  <audio style="width: 250px; border: 2px solid white; background-color: burgundy;" controls preload="none">
+    <source src="https://radio.vjmz-fm.com/radio/8000/stream" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+</section>
 </section>
 
   </a>
