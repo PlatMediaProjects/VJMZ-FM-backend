@@ -17,7 +17,7 @@ const pool = new Pool({
 
 // Stream proxy route (optional)
 app.get('/stream', (req, res) => {
-  const streamUrl = 'https://cast3.asurahosting.com/proxy/platinu7/stream'; // updated to HTTPS
+  const streamUrl const streamUrl = 'https://radio.vjmz-fm.com/radio/8000/stream';
   http.get(streamUrl, (streamRes) => {
     res.setHeader('Content-Type', 'audio/mpeg');
     streamRes.pipe(res);
