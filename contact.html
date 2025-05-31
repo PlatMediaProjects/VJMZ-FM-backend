@@ -67,12 +67,21 @@
   <h1>Contact VJMZ-FM</h1>
   <p>Have a question or comment? Use the form below to reach out to us:</p>
 
-  <form action="https://api.vjmz-fm.com/contact" method="POST">
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="email" name="email" placeholder="Your Email Address" required>
-    <textarea name="comments" placeholder="Your Comments" required></textarea>
-    <button type="submit">Submit</button>
-  </form>
+  <form action="https://api.vjmz-fm.com/contact" method="POST" onsubmit="return showConfirmation();">
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="email" name="email" placeholder="Your Email Address" required>
+  <textarea name="comments" placeholder="Your Comments" required></textarea>
+  <button type="submit">Submit</button>
+</form>
+<p id="confirmation" style="color: green; display: none;">Message sent. Thank you!</p>
+
+<script>
+  function showConfirmation() {
+    document.getElementById('confirmation').style.display = 'block';
+    return true;
+  }
+</script>
+
 
   <a href="index.html">Return to Home</a>
 
