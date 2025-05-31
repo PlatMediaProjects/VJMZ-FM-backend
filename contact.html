@@ -67,13 +67,40 @@
   <h1>Contact VJMZ-FM</h1>
   <p>Have a question or comment? Use the form below to reach out to us:</p>
 
-  <form action="https://api.vjmz-fm.com/contact" method="POST" onsubmit="return showConfirmation();">
+  <form id="contactForm">
   <input type="text" name="name" placeholder="Your Name" required>
   <input type="email" name="email" placeholder="Your Email Address" required>
   <textarea name="comments" placeholder="Your Comments" required></textarea>
   <button type="submit">Submit</button>
 </form>
-<p id="confirmation" style="color: green; display: none;">Message sent. Thank you!</p>
+
+<p id="confirmation" style="color: green; display: none;"></p>
+
+<script>
+  document.getElementById('contactForm').addEventListener('submit', async function (e) {
+    e.preventDefault(); // Stop default form submission
+
+    const formData = new FormData(this);
+    const data = new URLSearchParams(formData);
+
+    const response = await fetch('https://api.vjmz-fm.com/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data
+    });
+
+    const confirmation = document.getElementById('confirmation');
+    if (response.ok) {
+      confirmation.textContent = 'Message sent successfully!';
+      confirmation.style.display = 'block';
+      this.reset();
+    } else {
+      confirmation.textContent = 'Failed to send message. Please try again later.';
+      confirmation.style.display = 'block';
+    }
+  });
+</script>
+
 
 <script>
   function showConfirmation() {
