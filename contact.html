@@ -68,11 +68,54 @@
   <p>Have a question or comment? Use the form below to reach out to us:</p>
 
   <form id="contactForm">
-  <input type="text" name="name" placeholder="Your Name" required>
-  <input type="email" name="email" placeholder="Your Email Address" required>
-  <textarea name="comments" placeholder="Your Comments" required></textarea>
-  <button type="submit">Submit</button>
+  <label for="name">Name:</label>
+  <input type="text" name="name" id="name" required />
+
+  <label for="email">Email:</label>
+  <input type="email" name="email" id="email" required />
+
+  <label for="comments">Message:</label>
+  <textarea name="comments" id="comments" required></textarea>
+
+  <button type="submit">Send</button>
 </form>
+
+<p id="formResponse"></p>
+
+<script>
+  document.getElementById('contactForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const comments = document.getElementById('comments').value.trim();
+
+    const responseDisplay = document.getElementById('formResponse');
+    responseDisplay.textContent = 'Sending...';
+
+    try {
+      const res = await fetch('https://api.vjmz-fm.com/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, comments })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        responseDisplay.textContent = 'Thank you! Your message has been sent.';
+        document.getElementById('contactForm').reset();
+      } else {
+        responseDisplay.textContent = 'Something went wrong. Please try again later.';
+      }
+    } catch (err) {
+      console.error(err);
+      responseDisplay.textContent = 'There was an error. Please check your connection.';
+    }
+  });
+</script>
+
 
 <p id="confirmation" style="color: green; display: none;"></p>
 
