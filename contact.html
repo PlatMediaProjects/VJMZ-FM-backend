@@ -77,39 +77,41 @@
 <div id="formResponse"></div>
 
 
-<script>
-  document.getElementById('contactForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+  <script>
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const comments = document.getElementById('comments').value.trim();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const comments = document.getElementById('comments').value.trim();
+  const responseDisplay = document.getElementById('formResponse');
 
-    const responseDisplay = document.getElementById('formResponse');
-    responseDisplay.textContent = 'Sending...';
+  responseDisplay.textContent = 'Sending...';
 
-    try {
-      const res = await fetch('https://api.vjmz-fm.com/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, email, comments })
-      });
+  try {
+    const res = await fetch('https://api.vjmz-fm.com/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, comments }),
+    });
 
-      const data = await res.json();
-      if (data.success) {
-        responseDisplay.textContent = 'Thank you! Your message has been sent.';
-        document.getElementById('contactForm').reset();
-      } else {
-        responseDisplay.textContent = 'Something went wrong. Please try again later.';
-      }
-    } catch (err) {
-      console.error(err);
-      responseDisplay.textContent = 'There was an error. Please check your connection.';
+    const data = await res.json();
+
+    if (data.success) {
+      responseDisplay.textContent = 'Thank you! Your message has been sent.';
+      document.getElementById('contactForm').reset();
+    } else {
+      responseDisplay.textContent = 'Something went wrong. Please try again later.';
     }
-  });
+  } catch (err) {
+    console.error(err);
+    responseDisplay.textContent = 'There was an error. Please check your connection.';
+  }
+});
 </script>
+
 
 
 <p id="confirmation" style="color: green; display: none;"></p>
