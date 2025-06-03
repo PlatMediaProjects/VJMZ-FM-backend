@@ -49,6 +49,20 @@ app.post('/music/submit', upload.single('track_file'), (req, res) => {
 
   res.status(200).send('Music submitted successfully!');
 });
+app.post('/advertise', express.urlencoded({ extended: true }), (req, res) => {
+  const { company_name, contact_name, email, phone, message } = req.body;
+
+  console.log("New advertising inquiry received:", {
+    company_name,
+    contact_name,
+    email,
+    phone,
+    message,
+  });
+
+  // You can optionally: send an email, store to DB, etc.
+  res.status(200).send('Advertising inquiry submitted successfully!');
+});
 
 // Root route
 app.get('/', (req, res) => {
