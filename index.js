@@ -97,6 +97,46 @@ app.post('/register', async (req, res) => {
     }
   }
 });
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+app.post('/advertise', express.urlencoded({ extended: true }), async (req, res) => {
+  const { company_name, contact_name, email, phone, message } = req.body;
+
+  // 1. Save to PostgreSQL
+  try {
+    await pool.query(
+      'INSERT INTO advertising_inquiries (company_name, contact_name, email, phone, message) VALUES ($1, $2, $3, $4, $5)',
+      [company_name, contact_name, email, phone, message]
+    );
+  } catch (err) {
+    console.error('Database insert error:', err);
+    return res.status(500).send('Error saving to database.');
+  }
+
+  // 2. Send email notification
+  const msg = {
+    to: 'talk2us@vjmz-fm.com',
+    from: 'no-reply@vjmz-fm.com',
+    subject: 'New Advertising Inquiry',
+    html: `
+      <h2>Advertising Inquiry Received</h2>
+      <p><strong>Company:</strong> ${company_name}</p>
+      <p><strong>Contact:</strong> ${contact_name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Phone:</strong> ${phone}</p>
+      <p><strong>Message:</strong><br>${message}</p>
+    `,
+  };
+
+  try {
+    await sgMail.send(msg);
+    res.status(200).send('Inquiry received successfully!');
+  } catch (err) {
+    console.error('SendGrid error:', err.response?.body || err.message);
+    res.status(500).send('Error sending email.');
+  }
+});
 
 // Start server
 app.listen(PORT, () => {
