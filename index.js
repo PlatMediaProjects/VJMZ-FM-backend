@@ -2,6 +2,9 @@ const express = require('express');
 const http = require('http');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +28,26 @@ app.get('/stream', (req, res) => {
     console.error('Stream Error:', err.message);
     res.status(500).send('Stream Unavailable');
   });
+});
+app.post('/music/submit', upload.single('track_file'), (req, res) => {
+  const { artist_name, track_title, contact_email, message } = req.body;
+  const trackFile = req.file;
+
+  if (!trackFile) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  console.log('Music Submission Received:', {
+    artist_name,
+    track_title,
+    contact_email,
+    message,
+    filename: trackFile.originalname,
+  });
+
+  // Optional: Store or email the submission
+
+  res.status(200).send('Music submitted successfully!');
 });
 
 // Root route
@@ -115,6 +138,25 @@ router.post("/contact", async (req, res) => {
     console.error("Mail error:", error);
     res.status(500).json({ error: "Failed to send email." });
   }
+});
+app.post('/music/submit', upload.single('track_file'), (req, res) => {
+  const { artist_name, track_title, contact_email, message } = req.body;
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).json({ success: false, message: 'No file uploaded.' });
+  }
+
+  // Log or handle data
+  console.log('Received music submission:', {
+    artist_name,
+    track_title,
+    contact_email,
+    message,
+    filename: file.originalname
+  });
+
+  res.json({ success: true, message: 'Music submitted successfully.' });
 });
 
 export default router;
