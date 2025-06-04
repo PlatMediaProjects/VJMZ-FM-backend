@@ -144,74 +144,47 @@ app.listen(PORT, () => {
 });
 // 📍 backend/contactHandler.js
 // This backend handler will save contact form submissions and send them via email to talk2us@vjmz-fm.com
-
-import express from "express";
-import nodemailer from "nodemailer";
-import fs from "fs";
-import path from "path";
-
-const router = express.Router();
+const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
 
 // POST /contact
-router.post("/contact", async (req, res) => {
+app.post('/contact', async (req, res) => {
   const { name, email, comments } = req.body;
 
-  // Validate fields
   if (!name || !email || !comments) {
-    return res.status(400).json({ error: "All fields are required." });
+    return res.status(400).json({ error: 'All fields are required.' });
   }
 
-  // Save to local file (optional step for recordkeeping)
+  // Save log
   const record = `${new Date().toISOString()} | ${name} <${email}>: ${comments}\n`;
   fs.appendFile(
-    path.resolve("./submissions/contact.log"),
+    path.resolve('./submissions/contact.log'),
     record,
-    (err) => err && console.error("Log error:", err)
+    (err) => err && console.error('Log error:', err)
   );
 
   try {
-    // Configure email
     const transporter = nodemailer.createTransport({
-      service: "SendGrid", // or "gmail" or any other SMTP
+      service: 'SendGrid',
       auth: {
         user: process.env.SENDGRID_USER,
-        pass: process.env.SENDGRID_PASS
-      }
+        pass: process.env.SENDGRID_PASS,
+      },
     });
 
-    const mailOptions = {
+    await transporter.sendMail({
       from: email,
-      to: "talk2us@vjmz-fm.com",
+      to: 'talk2us@vjmz-fm.com',
       subject: `New Contact Form Submission from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${comments}`
-    };
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${comments}`,
+    });
 
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: "Message sent successfully." });
+    res.status(200).json({ message: 'Message sent successfully.' });
   } catch (error) {
-    console.error("Mail error:", error);
-    res.status(500).json({ error: "Failed to send email." });
+    console.error('Mail error:', error);
+    res.status(500).json({ error: 'Failed to send email.' });
   }
 });
-app.post('/music/submit', upload.single('track_file'), (req, res) => {
-  const { artist_name, track_title, contact_email, message } = req.body;
-  const file = req.file;
 
-  if (!file) {
-    return res.status(400).json({ success: false, message: 'No file uploaded.' });
-  }
-
-  // Log or handle data
-  console.log('Received music submission:', {
-    artist_name,
-    track_title,
-    contact_email,
-    message,
-    filename: file.originalname
-  });
-
-  res.json({ success: true, message: 'Music submitted successfully.' });
-});
-
-export default router;
 
