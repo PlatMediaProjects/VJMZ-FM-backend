@@ -3,7 +3,7 @@ const http = require('http');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
-const storage = multer.memoryStorage();
+const storage = multer.memoryStorage(); 
 const upload = multer({ storage: storage });
 
 const app = express();
