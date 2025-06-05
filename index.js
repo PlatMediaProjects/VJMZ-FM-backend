@@ -145,47 +145,5 @@ app.listen(PORT, () => {
 // 📍 backend/contactHandler.js
 // This backend handler will save contact form submissions and send them via email to talk2us@vjmz-fm.com
 
-const nodemailer = require('nodemailer');
-const fs = require('fs');
-const path = require('path');
-
-// POST /contact
-app.post('/contact', async (req, res) => {
-  const { name, email, comments } = req.body;
-
-  if (!name || !email || !comments) {
-    return res.status(400).json({ error: 'All fields are required.' });
-  }
-
-  // Save log
-  const record = `${new Date().toISOString()} | ${name} <${email}>: ${comments}\n`;
-  fs.appendFile(
-    path.resolve('./submissions/contact.log'),
-    record,
-    (err) => err && console.error('Log error:', err)
-  );
-
-  try {
-    const transporter = nodemailer.createTransport({
-      service: 'SendGrid',
-      auth: {
-        user: process.env.SENDGRID_USER,
-        pass: process.env.SENDGRID_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: email,
-      to: 'talk2us@vjmz-fm.com',
-      subject: `New Contact Form Submission from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${comments}`,
-    });
-
-    res.status(200).json({ message: 'Message sent successfully.' });
-  } catch (error) {
-    console.error('Mail error:', error);
-    res.status(500).json({ error: 'Failed to send email.' });
-  }
-});
 
 
