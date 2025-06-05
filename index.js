@@ -8,7 +8,6 @@ const upload = multer({ storage: storage });
 
 const app = express();
 const PORT = process.env.PORT || 3000; 
-const express = require('express');
 const http = require('http');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
@@ -18,7 +17,6 @@ const sgMail = require('@sendgrid/mail');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
@@ -137,4 +135,5 @@ app.post('/advertise', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
