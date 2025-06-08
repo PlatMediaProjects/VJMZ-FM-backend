@@ -105,8 +105,9 @@ app.post('/advertise', async (req, res) => {
   }
 
   const msg = {
-    to: 'talk2us@vjmz-fm.com',
-    from: 'no-reply@vjmz-fm.com',
+    to: process.env.TO_EMAIL,
+from: process.env.FROM_EMAIL,
+
     subject: 'New Advertising Inquiry',
     html: `
       <h2>Advertising Inquiry Received</h2>
