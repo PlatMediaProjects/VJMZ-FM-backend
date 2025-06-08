@@ -89,7 +89,6 @@ app.post('/music/submit', upload.single('track_file'), (req, res) => {
 });
 
 // Advertising Form
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 app.post('/advertise', async (req, res) => {
   const { company_name, contact_name, email, phone, message } = req.body;
