@@ -1,4 +1,9 @@
 const express = require('express');
+require('dotenv').config(); // Load environment variables
+
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 const http = require('http');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
