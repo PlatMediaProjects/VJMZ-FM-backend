@@ -83,6 +83,43 @@
   <footer>
     <p>&copy; 2025 VJMZ-FM.COM — <a href="index.html">Home</a> | <a href="terms-of-use.html">Terms of Use</a></p>
   </footer>
+  <script>
+  document.getElementById("advertise-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const business = document.getElementById("business").value;
+    const email = document.getElementById("ad-email").value;
+    const goals = document.getElementById("goals").value;
+
+    const data = {
+      company_name: business,
+      email: email,
+      message: goals
+    };
+
+    try {
+      const res = await fetch("/advertise", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const text = await res.text();
+
+      if (res.ok) {
+        alert("✅ Thank you! Your advertising inquiry was received.");
+        window.location.href = "/thank-you.html"; // Or just stay on the page
+      } else {
+        alert("⚠️ Submission failed. Please try again later.");
+        console.error("Server said:", text);
+      }
+    } catch (err) {
+      alert("❌ An error occurred. Please try again.");
+      console.error("Fetch error:", err);
+    }
+  });
+</script>
+
 </body>
 </html>
 
