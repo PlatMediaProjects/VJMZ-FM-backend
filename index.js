@@ -12,7 +12,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const app = express();
-const sgMail = require('@sendgrid/mail');
 
 const PORT = process.env.PORT || 3000;
 
