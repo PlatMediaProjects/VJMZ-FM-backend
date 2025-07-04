@@ -131,5 +131,22 @@ from: process.env.FROM_EMAIL,
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+app.get('/test-db', async (req, res) => {
+  try {
+    const result = await db.query('SELECT NOW()');
+    res.status(200).json({
+      status: 'success',
+      message: 'Database connected!',
+      time: result.rows[0].now
+    });
+  } catch (error) {
+    console.error('DB test failed:', error.message);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to connect to the database',
+      error: error.message
+    });
+  }
+});
 
 
