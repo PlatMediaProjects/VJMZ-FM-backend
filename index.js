@@ -126,6 +126,49 @@ from: process.env.FROM_EMAIL,
     res.status(500).send('Error sending email.');
   }
 });
+app.post('/submit-ad-agreement', async (req, res) => {
+  const {
+    customerName,
+    businessName,
+    title,
+    startDate,
+    adLength,
+    frequency,
+    duration,
+    weeks,
+    notes,
+    signature,
+    dateSigned
+  } = req.body;
+
+  const msg = {
+    to: 'your-email@vjmz-fm.com', // 🔁 Replace with your email
+    from: 'no-reply@vjmz-fm.com', // ✅ Must be verified in SendGrid
+    subject: `New Advertising Agreement from ${customerName}`,
+    html: `
+      <h2>VJMZ-FM Advertising Agreement Submission</h2>
+      <p><strong>Customer Name:</strong> ${customerName}</p>
+      <p><strong>Business Name:</strong> ${businessName}</p>
+      <p><strong>Title:</strong> ${title}</p>
+      <p><strong>Start Date:</strong> ${startDate}</p>
+      <p><strong>Ad Length:</strong> ${adLength} seconds</p>
+      <p><strong>Frequency:</strong> ${frequency} times/day</p>
+      <p><strong>Duration:</strong> ${duration} days</p>
+      <p><strong>Weeks:</strong> ${weeks}</p>
+      <p><strong>Notes:</strong> ${notes}</p>
+      <p><strong>Signature:</strong> ${signature}</p>
+      <p><strong>Date Signed:</strong> ${dateSigned}</p>
+    `
+  };
+
+  try {
+    await sgMail.send(msg);
+    res.send("✅ Success! Your agreement has been submitted and emailed.");
+  } catch (error) {
+    console.error("SendGrid error:", error);
+    res.status(500).send("❌ Submission failed. Please try again later.");
+  }
+});
 
 // Start Server
 app.listen(PORT, () => {
