@@ -67,6 +67,92 @@ app.post('/register', async (req, res) => {
     }
   }
 });
+const express = require('express');
+const bodyParser = require('body-parser');
+const sgMail = require('@sendgrid/mail');
+const multer = require('multer');
+const path = require('path');
+
+const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Serve frontend
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 👉 Updated Route for Form Submission with File Uploads
+app.post('/submit-ad-agreement', upload.fields([
+  { name: 'adFile', maxCount: 1 },
+  { name: 'docFile', maxCount: 1 }
+]), async (req, res) => {
+  const {
+    customerName, email, businessName, title,
+    startDate, adLength, frequency, duration,
+    weeks, notes, signature, dateSigned
+  } = req.body;
+
+  const attachments = [];
+
+  // Attach MP3 if uploaded
+  if (req.files['adFile']) {
+    const file = req.files['adFile'][0];
+    attachments.push({
+      content: file.buffer.toString("base64"),
+      filename: file.originalname,
+      type: file.mimetype,
+      disposition: "attachment"
+    });
+  }
+
+  // Attach document if uploaded
+  if (req.files['docFile']) {
+    const file = req.files['docFile'][0];
+    attachments.push({
+      content: file.buffer.toString("base64"),
+      filename: file.originalname,
+      type: file.mimetype,
+      disposition: "attachment"
+    });
+  }
+
+  const msg = {
+    to: 'your-email@vjmz-fm.com', // ✅ Replace with real email
+    from: 'no-reply@vjmz-fm.com', // ✅ Verified sender in SendGrid
+    subject: `New Advertising Agreement from ${customerName}`,
+    html: `
+      <h2>New Ad Agreement Submission</h2>
+      <p><strong>Customer Name:</strong> ${customerName}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Business Name:</strong> ${businessName}</p>
+      <p><strong>Title:</strong> ${title}</p>
+      <p><strong>Start Date:</strong> ${startDate}</p>
+      <p><strong>Ad Length:</strong> ${adLength} seconds</p>
+      <p><strong>Frequency:</strong> ${frequency} times/day</p>
+      <p><strong>Duration:</strong> ${duration} days</p>
+      <p><strong>Weeks:</strong> ${weeks}</p>
+      <p><strong>Notes:</strong> ${notes}</p>
+      <p><strong>Signature:</strong> ${signature}</p>
+      <p><strong>Date Signed:</strong> ${dateSigned}</p>
+    `,
+    attachments
+  };
+
+  try {
+    await sgMail.send(msg);
+    res.status(200).send("Success");
+  } catch (err) {
+    console.error("SendGrid Error:", err);
+    res.status(500).send("Error sending email.");
+  }
+});
+
+// Server start
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
 
 // Submit Music
 app.post('/music/submit', upload.single('track_file'), (req, res) => {
