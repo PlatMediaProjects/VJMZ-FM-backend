@@ -25,23 +25,27 @@
     }
     button {
       padding: 10px 20px;
-      background-color: #8b0000;
+      background-color: darkgreen;
       color: white;
       border: none;
       cursor: pointer;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+
   <h2>VJMZ-FM Standard Advertising Agreement</h2>
   <p>Call us toll free: 1-800-771-1305 (Option #1 Sales & Sponsorship)</p>
   <p><strong>NSB MEDIA, a service company of Platinum Hits Entertainment Inc.</strong><br>1201 W Peachtree St NW, Suite 2300, Atlanta, GA 30309</p>
-  
 
-  <form action="/submit-ad-agreement" method="POST">
+  <form id="adForm" action="/submit-ad-agreement" method="POST" enctype="multipart/form-data">
 
     <label for="customerName">Customer Name:</label>
     <input type="text" id="customerName" name="customerName" required>
+
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" name="email" required>
 
     <label for="businessName">Business Name:</label>
     <input type="text" id="businessName" name="businessName" required>
@@ -53,13 +57,18 @@
     <input type="date" id="startDate" name="startDate" required>
 
     <label for="adLength">Ad Length (seconds):</label>
-    <input type="number" id="adLength" name="adLength" value="30" required>
+    <select id="adLength" name="adLength" required>
+      <option value="15">15 seconds</option>
+      <option value="30" selected>30 seconds</option>
+      <option value="45">45 seconds</option>
+      <option value="60">60 seconds</option>
+    </select>
 
     <label for="frequency">Ad Frequency Per Day:</label>
-    <input type="number" id="frequency" name="frequency" value="4" required>
+    <input type="number" id="frequency" name="frequency" min="1" max="10" value="4" required>
 
     <label for="duration">Campaign Duration (days):</label>
-    <input type="number" id="duration" name="duration" value="5" required>
+    <input type="number" id="duration" name="duration" min="1" value="5" required>
 
     <label for="weeks">Run Time Period (Select Weeks):</label>
     <select id="weeks" name="weeks" required>
@@ -78,14 +87,43 @@
     <label for="notes">Additional Notes or Voiceover Talent Requests:</label>
     <textarea id="notes" name="notes" rows="4"></textarea>
 
+    <label for="adFile">Upload MP3 Ad Copy (optional):</label>
+    <input type="file" id="adFile" name="adFile" accept=".mp3">
+
+    <label for="docFile">Upload Script / Bullet Points (optional):</label>
+    <input type="file" id="docFile" name="docFile" accept=".pdf,.doc,.docx">
+
     <label for="signature">Digital Signature:</label>
     <input type="text" id="signature" name="signature" required>
 
     <label for="dateSigned">Date Signed:</label>
     <input type="date" id="dateSigned" name="dateSigned" required>
 
-    <button type="submit">Submit Agreement</button>
+    <button type="submit">Proceed to Checkout</button>
   </form>
+
+  <script>
+    document.getElementById('adForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = "https://square.link/u/YOUR_CHECKOUT_LINK"; // ✅ Replace this with your actual Square link
+        } else {
+          alert("❌ There was an error submitting the form.");
+        }
+      })
+      .catch(() => alert("Submission failed. Try again."));
+    });
+  </script>
+
 </body>
 </html>
+
 
