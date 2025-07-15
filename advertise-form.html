@@ -94,11 +94,17 @@
 
     <label for="docFile">Upload Script / Bullet Points (optional):</label>
     <input type="file" id="docFile" name="docFile" accept=".pdf,.doc,.docx">
-     <label for="creativeServices">Creative Services Requested?</label><br>
-<input type="checkbox" id="creativeServices" name="creativeServices" value="Yes">
-<label for="creativeServices">Yes – I request creative services for this order</label>
+     <label>Creative Services Requested?</label><br>
+<input type="radio" id="creativeYes" name="creativeServices" value="Yes">
+<label for="creativeYes">Yes – I request creative services for this order</label><br>
+
+<input type="radio" id="creativeNo" name="creativeServices" value="No" checked>
+<label for="creativeNo">No – I do not need creative services</label>
+
 <p style="font-size: 0.9em; color: #444;">
   Complimentary standard audio production is included. However, creative services requiring background music, voiceover talent, or named personalities may involve additional agent and licensing fees. NSB MEDIA is not liable for such third-party costs, and customer shall provide all necessary licenses for public broadcast.
+</p>
+
 </p>
 
     <label for="signature">Digital Signature:</label>
