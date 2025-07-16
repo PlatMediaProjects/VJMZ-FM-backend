@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Submit Advertising Agreement</title>
+</head>
+<body>
+  <h1>Submit Your Advertising Agreement</h1>
+  <form action="/submit-ad-agreement" method="POST" enctype="multipart/form-data">
+    <label>Full Name:<br>
+      <input type="text" name="name" required>
+    </label><br><br>
+
+    <label>Email:<br>
+      <input type="email" name="email" required>
+    </label><br><br>
+
+    <label>Phone Number:<br>
+      <input type="tel" name="phone" required>
+    </label><br><br>
+
+    <label>Creative Services Requested (Complimentary):<br>
+      <input type="checkbox" name="creative_services" value="Yes"> Yes
+    </label><br><br>
+
+    <label>Upload Ad Copy (MP3):<br>
+      <input type="file" name="adCopy" accept=".mp3">
+    </label><br><br>
+
+    <label>Upload Bullet Points (Doc, PDF):<br>
+      <input type="file" name="bulletPoints" accept=".doc,.docx,.pdf">
+    </label><br><br>
+
+    <button type="submit">Proceed to Checkout</button>
+  </form>
+</body>
+</html>
 
