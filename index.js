@@ -255,6 +255,22 @@ app.post('/submit-ad-agreement', async (req, res) => {
     res.status(500).send("❌ Submission failed. Please try again later.");
   }
 });
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+app.post('/submit-ad-agreement', upload.fields([
+  { name: 'adCopy', maxCount: 1 },
+  { name: 'bulletPoints', maxCount: 1 }
+]), async (req, res) => {
+  const formData = req.body;
+  const files = req.files;
+
+  console.log('Form submitted:', formData);
+  console.log('Uploaded files:', files);
+
+  // ✅ Redirect to Square payment page
+  res.redirect('https://square.link/u/bumpWnJG');
+});
 
 // Start Server
 app.listen(PORT, () => {
