@@ -115,9 +115,14 @@
 
     <label for="dateSigned">Date Signed:</label>
     <input type="date" id="dateSigned" name="dateSigned" required>
-
-    <button type="submit">Proceed to Checkout</button>
   </form>
+    href="https://checkout.square.site/merchant/SFSCM5ZQJ2MDP/checkout/J5CXDJCOMISNWSQJG6E73O6A" target="_blank">
+  <button type="button" style="padding: 0.75rem; background-color: var(--burgundy); color: white; font-weight: bold; border-radius: 8px;">
+    Proceed to Checkout
+  </button>
+</a>
+
+  
 
   <script>
     document.getElementById('adForm').addEventListener('submit', function (e) {
@@ -139,6 +144,14 @@
       .catch(() => alert("Submission failed. Try again."));
     });
   </script>
+.then(response => {
+  if (response.ok) {
+    // Redirect to Square checkout
+    window.location.href = "https://checkout.square.site/merchant/SFSCM5ZQJ2MDP/checkout/J5CXDJCOMISNWSQJG6E73O6A";
+  } else {
+    alert('Submission failed. Please try again.');
+  }
+})
 
 </body>
 </html>
