@@ -103,26 +103,28 @@
     };
 
     try {
-      const res = await fetch("/advertise", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      const text = await res.text();
-
-      if (res.ok) {
-        alert("✅ Thank you! Your advertising inquiry was received.");
-        window.location.href = "/thank-you.html"; // Or just stay on the page
-      } else {
-        alert("⚠️ Submission failed. Please try again later.");
-        console.error("Server said:", text);
-      }
-    } catch (err) {
-      alert("❌ An error occurred. Please try again.");
-      console.error("Fetch error:", err);
-    }
+      <script>
+  const res = await fetch("/advertise", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
   });
+
+  const text = await res.text();
+
+  if (res.ok) {
+    alert("✅ Thank you! Your advertising inquiry was received.");
+    window.location.href = "/thank-you.html";
+  } else {
+    alert("⚠️ Submission failed. Please try again later.");
+    console.error("Server said:", text);
+  }
+} catch (err) {
+  alert("❌ An error occurred. Please try again.");
+  console.error("Fetch error:", err);
+}
+</script>
+
 </script>
 
 </body>
