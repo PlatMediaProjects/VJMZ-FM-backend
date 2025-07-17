@@ -108,13 +108,13 @@
 
 </p>
 
-<label for="signature">Digital Signature:</label>
-<input type="text" id="signature" name="signature" required>
+<label for="signature">Digital Signature:</label><br />
+<input type="text" id="signature" name="signature" required /><br /><br />
 
-<label for="dateSigned">Date Signed:</label>
-<input type="date" id="dateSigned" name="dateSigned" required>
+<label for="dateSigned">Date Signed:</label><br />
+<input type="date" id="dateSigned" name="dateSigned" required /><br /><br />
 
-<button type="submit" id="submitBtn" style="padding: 0.75rem; background-color: var(--burgundy); color: white; font-weight: bold; border-radius: 8px;">
+<button type="submit" id="submitBtn" style="padding: 0.75rem; background-color: #800020; color: white; font-weight: bold; border-radius: 8px;">
   Proceed to Checkout
 </button>
 </form>
@@ -122,7 +122,6 @@
 <script>
   document.getElementById('adForm').addEventListener('submit', async function (e) {
     e.preventDefault();
-
     const form = e.target;
     const formData = new FormData(form);
 
@@ -133,21 +132,13 @@
       });
 
       if (response.ok) {
-        // Redirect to Square checkout after successful submission
         window.location.href = "https://checkout.square.site/merchant/SFSCM5ZQJ2MDP/checkout/J5CXDJCOMISNWSQJG6E73O6A";
       } else {
         alert('❌ Submission failed. Please try again.');
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
       alert('⚠️ An unexpected error occurred.');
+      console.error(error);
     }
   });
 </script>
-
-})
-
-</body>
-</html>
-
-
