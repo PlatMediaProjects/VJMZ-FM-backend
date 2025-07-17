@@ -246,7 +246,7 @@ app.post('/submit-ad-agreement', async (req, res) => {
     res.status(500).send("❌ Submission failed. Please try again later.");
   }
 });
-const upload = multer({ dest: 'uploads/' });
+
 
 app.post('/submit-ad-agreement', upload.fields([
   { name: 'adCopy', maxCount: 1 },
