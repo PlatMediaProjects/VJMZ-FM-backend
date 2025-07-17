@@ -219,7 +219,7 @@ app.post('/submit-ad-agreement', async (req, res) => {
   } = req.body;
 
   const msg = {
-    to: 'your-email@vjmz-fm.com', // 🔁 Replace with your email
+    to: 'talk2us@vjmz-fm.com', // 🔁 Replace with your email
     from: 'no-reply@vjmz-fm.com', // ✅ Must be verified in SendGrid
     subject: `New Advertising Agreement from ${customerName}`,
     html: `
@@ -246,7 +246,6 @@ app.post('/submit-ad-agreement', async (req, res) => {
     res.status(500).send("❌ Submission failed. Please try again later.");
   }
 });
-const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 app.post('/submit-ad-agreement', upload.fields([
