@@ -67,7 +67,6 @@ app.post('/register', async (req, res) => {
     }
   }
 });
-const express = require('express');
 const bodyParser = require('body-parser');
 const sgMail = require('@sendgrid/mail');
 const multer = require('multer');
