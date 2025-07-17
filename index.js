@@ -112,7 +112,7 @@ app.post('/submit-ad-agreement', upload.fields([
   }
 
   const msg = {
-    to: 'your-email@vjmz-fm.com', // ✅ Replace with real email
+    to: 'talk2us@vjmz-fm.com', // ✅ Replace with real email
     from: 'no-reply@vjmz-fm.com', // ✅ Verified sender in SendGrid
     subject: `New Advertising Agreement from ${customerName}`,
     html: `
@@ -143,7 +143,6 @@ app.post('/submit-ad-agreement', upload.fields([
 });
 
 // Server start
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
 
 // Submit Music
