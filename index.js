@@ -67,13 +67,6 @@ app.post('/register', async (req, res) => {
     }
   }
 });
-const bodyParser = require('body-parser');
-const sgMail = require('@sendgrid/mail');
-const multer = require('multer');
-const path = require('path');
-
-const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
