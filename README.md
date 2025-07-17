@@ -21,6 +21,6 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-```
+npm install pg
 
 3. Push your changes to GitHub and let Render redeploy your service.
