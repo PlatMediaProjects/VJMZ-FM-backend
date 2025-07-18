@@ -1,6 +1,10 @@
 const express = require('express');
 require('dotenv').config(); // Load environment variables
 const bodyParser = require('body-parser');
+<<<<<<< HEAD
+=======
+
+>>>>>>> 47bbe4d (Fix: Add missing body-parser import)
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
