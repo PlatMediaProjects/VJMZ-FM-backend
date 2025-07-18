@@ -1,20 +1,21 @@
 const express = require('express');
 require('dotenv').config(); // Load environment variables
 const bodyParser = require('body-parser');
-<<<<<<< HEAD
-=======
-
->>>>>>> 47bbe4d (Fix: Add missing body-parser import)
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const http = require('http'); 
+const http = require('http');
 const { Pool } = require('pg');
 const multer = require('multer');
-const storage = multer.memoryStorage(); 
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 const PORT = process.env.PORT || 3000;
 
