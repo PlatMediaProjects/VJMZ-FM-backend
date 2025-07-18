@@ -1,32 +1,34 @@
 const express = require('express');
-const path = require('path');
 require('dotenv').config(); // Load environment variables
 const bodyParser = require('body-parser');
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
 const http = require('http');
 const { Pool } = require('pg');
 const multer = require('multer');
+const path = require('path'); // ✅ YOU MUST ADD THIS LINE
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+// Middleware
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// ✅ Add this here
+app.use(express.static(path.join(__dirname, 'public')));
 
-// PostgreSQL setup
+// Your database pool
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: { rejectUnauthorized: false }
 });
 
-// Root route
+// Routes come next...
 app.get('/', (req, res) => {
   res.send('🎧 VJMZ-FM Backend is Live');
 });
