@@ -6,7 +6,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const http = require('http'); 
 const { Pool } = require('pg');
-const bcrypt = require('bcrypt');
 const multer = require('multer');
 const storage = multer.memoryStorage(); 
 const upload = multer({ storage: storage });
