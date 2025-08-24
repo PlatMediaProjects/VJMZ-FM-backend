@@ -88,7 +88,44 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 👉 Updated Route for Form Submission with File Uploads
-app.post('/submit-ad-agreement', upload.fields([
+// ---- SUBMIT AD AGREEMENT (with proper try/catch) ----
+app.post(
+  '/submit-ad-agreement',
+  upload.fields([
+    { name: 'adFile',  maxCount: 1 },
+    { name: 'docFile', maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const {
+        customerName, email, businessName, title,
+        startDate, adLength, frequency, duration,
+        weeks, notes, signature, dateSigned
+      } = req.body;
+
+      // (optional) attachments if you need them later:
+      // const attachments = [];
+      // for (const f of (req.files?.adFile || [])) attachments.push({ filename: f.originalname, path: f.path, contentType: f.mimetype });
+      // for (const f of (req.files?.docFile || [])) attachments.push({ filename: f.originalname, path: f.path, contentType: f.mimetype });
+
+      // You removed SendGrid — use the stub so the route still returns 200
+      await sendMailStub({
+        to: 'talk2us@vjmz-fm.com',
+        from: 'noreply@vjmz-fm.com',
+        subject: `Ad agreement from ${customerName || 'Unknown'}`,
+        html: `<p>Business: ${businessName || ''}</p><p>Contact: ${email || ''}</p>`
+      });
+
+      // Redirect or JSON — pick one
+      // return res.redirect('https://square.link/u/bumPwnJG');  // your Square link
+      return res.status(200).json({ ok: true });
+    } catch (err) {
+      console.error('submit-ad-agreement error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+);
+
   { name: 'adFile', maxCount: 1 },
   { name: 'docFile', maxCount: 1 }
 ]), async (req, res) => {
@@ -278,9 +315,6 @@ app.post('/submit-ad-agreement', upload.fields([
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
 app.get('/test-db', async (req, res) => {
   try {
     const result = await db.query('SELECT NOW()');
@@ -298,5 +332,16 @@ app.get('/test-db', async (req, res) => {
     });
   }
 });
+// ✅ SINGLE LISTENER GUARD — paste at bottom of index.js
+const PORT = process.env.PORT || 3000;
+
+if (require.main === module) {
+  if (!app.locals.__serverStarted) {
+    app.locals.__serverStarted = true;
+    app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
+  }
+}
+
+module.exports = app; // keep this as the final line
 
 
