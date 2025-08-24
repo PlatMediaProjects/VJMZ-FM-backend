@@ -1,7 +1,6 @@
 const express = require('express');
 require('dotenv').config(); // Load environment variables
 const bodyParser = require('body-parser');
-const sgMail = require('@sendgrid/mail');
 const http = require('http');
 const { Pool } = require('pg');
 const multer = require('multer');
@@ -11,8 +10,16 @@ const upload = multer({ storage: storage });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+// ---- EMAIL STUB (paste near the top of index.js, after imports) ----
+async function sendMailStub(msg) {
+  console.log('EMAIL STUB → would send:', {
+    to: msg.to || msg.To,
+    from: msg.from || msg.From,
+    subject: msg.subject || msg.Subject,
+  });
+  return { ok: true };
+}
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Middleware
 app.use(express.json());
@@ -72,7 +79,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -138,11 +145,13 @@ app.post('/submit-ad-agreement', upload.fields([
   };
 
   try {
-    await sgMail.send(msg);
-    res.status(200).send("Success");
-  } catch (err) {
-    console.error("SendGrid Error:", err);
-    res.status(500).send("Error sending email.");
+  await sendMailStub({
+  to: 'talk2us@vjmz-fm.com',
+  from: 'noreply@vjmz-fm.com',
+  subject: 'Form received',
+  html: '<p>Submission logged.</p>'
+});
+
   }
 });
 
@@ -199,12 +208,14 @@ from: process.env.FROM_EMAIL,
     `,
   };
 
-  try {
-    await sgMail.send(msg);
-    res.status(200).send('Inquiry received successfully!');
-  } catch (err) {
-    console.error('SendGrid error:', err.response?.body || err.message);
-    res.status(500).send('Error sending email.');
+  try 
+  await sendMailStub({
+  to: 'talk2us@vjmz-fm.com',
+  from: 'noreply@vjmz-fm.com',
+  subject: 'Form received',
+  html: '<p>Submission logged.</p>'
+});
+
   }
 });
 app.post('/submit-ad-agreement', async (req, res) => {
