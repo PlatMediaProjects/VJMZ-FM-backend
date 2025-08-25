@@ -310,25 +310,16 @@ app.post('/submit-ad-agreement', async (req, res) => {
     `
   };
 
-  try {
-    await sgMail.send(msg);
-    res.send("✅ Success! Your agreement has been submitted and emailed.");
-  } catch (error) {
-    console.error("SendGrid error:", error);
-    res.status(500).send("❌ Submission failed. Please try again later.");
-  }
-});
+// EMAIL STUB — safe, no external provider needed
+async function sendMailStub(msg) {
+  console.log('EMAIL STUB → would send:', {
+    to: msg?.to,
+    from: msg?.from,
+    subject: msg?.subject,
+  });
+  return { ok: true };
+}
 
-
-app.post('/submit-ad-agreement', upload.fields([
-  { name: 'adCopy', maxCount: 1 },
-  { name: 'bulletPoints', maxCount: 1 }
-]), async (req, res) => {
-  const formData = req.body;
-  const files = req.files;
-
-  console.log('Form submitted:', formData);
-  console.log('Uploaded files:', files);
 
   // ✅ Redirect to Square payment page
   res.redirect('https://square.link/u/bumpWnJG');
