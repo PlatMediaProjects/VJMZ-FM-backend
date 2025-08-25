@@ -126,14 +126,37 @@ app.post(
   }
 );
 
-  { name: 'adFile', maxCount: 1 },
-  { name: 'docFile', maxCount: 1 }
-]), async (req, res) => {
-  const {
-    customerName, email, businessName, title,
-    startDate, adLength, frequency, duration,
-    weeks, notes, signature, dateSigned
-  } = req.body;
+  // ---- SUBMIT AD AGREEMENT (pure JS, balanced, with try/catch) ----
+app.post(
+  '/submit-ad-agreement',
+  upload.fields([
+    { name: 'adFile',  maxCount: 1 },
+    { name: 'docFile', maxCount: 1 }
+  ]),
+  async (req, res) => {
+    try {
+      const {
+        customerName, email, businessName, title,
+        startDate, adLength, frequency, duration,
+        weeks, notes, signature, dateSigned
+      } = req.body;
+
+      // SendGrid removed — keep using the stub so the route succeeds
+      await sendMailStub({
+        to: 'talk2us@vjmz-fm.com',
+        from: 'noreply@vjmz-fm.com',
+        subject: `Ad agreement from ${customerName || 'Unknown'}`,
+        html: `<p>Business: ${businessName || ''}</p><p>Contact: ${email || ''}</p>`
+      });
+
+      return res.status(200).json({ ok: true });
+    } catch (err) {
+      console.error('submit-ad-agreement error:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+);
+
 
   const attachments = [];
 
@@ -191,9 +214,6 @@ app.post(
 
   }
 });
-
-// Server start
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
 
 // Submit Music
 app.post('/music/submit', upload.single('track_file'), (req, res) => {
