@@ -7,6 +7,10 @@ const multer = require('multer');
 const path = require('path'); // ✅ YOU MUST ADD THIS LINE
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const path = require('path');
+app.get('/terms-broadcast-consent.html', (_req, res) =>
+  res.sendFile(path.join(__dirname, 'terms-broadcast-consent.html'))
+);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
