@@ -13,3 +13,58 @@
 
 <div id="signupStatus" aria-live="polite"></div>
 
+<script>
+(function () {
+  const form = document.getElementById('signupForm');
+  const statusEl = document.getElementById('signupStatus');
+
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusEl.textContent = 'Sending…';
+
+    // Honeypot check
+    if (form.company && form.company.value.trim() !== '') {
+      statusEl.textContent = 'Blocked as spam.';
+      return;
+    }
+
+    const first = (form.firstName?.value || '').trim();
+    const last  = (form.lastName?.value  || '').trim();
+    const email = (form.email?.value     || '').trim();
+    const phone = (form.phone?.value     || '').trim();
+
+    if (!email) {
+      statusEl.textContent = 'Please enter a valid email.';
+      return;
+    }
+
+    const payload = {
+      name: (first || last) ? `${first} ${last}`.trim() : email,
+      email,
+      phone,
+      message: 'Newsletter / Fan signup from signup.html'
+    };
+
+    try {
+      const res = await fetch('https://api.vjmz-fm.com/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+
+      statusEl.textContent = '✅ You’re signed up!';
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = '❌ Something went wrong. Please try again.';
+    }
+  });
+})();
+</script>
