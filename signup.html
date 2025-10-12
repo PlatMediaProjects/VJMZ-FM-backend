@@ -1,1 +1,59 @@
+<form id="form" onsubmit="return handleSubmit(event)">
+<div id="status" style="margin-top:.75rem;"></div>
+// --- CONTACT ROUTE (improved diagnostics) ---
+app.post("/api/contact", async (req, res) => {
+  try {
+    const { name, email, phone, message } = req.body || {};
+    if (!name || !email || !message) {
+      return res.status(400).json({ ok: false, error: "Missing required fields: name, email, message" });
+    }
+
+    const subject = `New contact form message from ${name}`;
+    const text = `
+From: ${name} <${email}>
+Phone: ${phone || "(not provided)"}
+
+Message:
+${message}
+    `.trim();
+    const html = `
+      <h2>New Contact Form Submission</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Phone:</strong> ${phone || "(not provided)"}</p>
+      <p><strong>Message:</strong></p>
+      <p>${String(message).replace(/\n/g, "<br>")}</p>
+    `;
+
+    const domain = process.env.MAILGUN_DOMAIN;
+    const fromEmail = process.env.FROM_EMAIL;
+    const toEmail = process.env.TO_EMAIL;
+
+    // Basic sanity checks
+    if (!domain || !fromEmail || !toEmail) {
+      return res.status(500).json({ ok: false, error: "Server email configuration missing (env vars)." });
+    }
+
+    const mgResp = await mg.messages.create(domain, {
+      from: `VJMZ-FM <${fromEmail}>`,
+      to: toEmail,
+      subject,
+      text,
+      html,
+      "h:Reply-To": email
+    });
+
+    // If Mailgun returns id, we’re good
+    if (mgResp && mgResp.id) {
+      return res.status(200).json({ ok: true, message: "Message sent" });
+    } else {
+      return res.status(502).json({ ok: false, error: "Mailgun accepted no id response" });
+    }
+  } catch (err) {
+    // Expose Mailgun error message to client for debugging (safe enough here)
+    const msg = err?.message || String(err);
+    console.error("Mailgun error:", msg);
+    return res.status(502).json({ ok: false, error: msg });
+  }
+});
 
