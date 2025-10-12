@@ -22,15 +22,59 @@ const mg = mailgun.client({
 });
 
 // --- CONTACT ROUTE ---
-// Matches: https://api.vjmz-fm.com/api/contact  (POST)
-app.post("/api/contact", async (req, res) => {
+// app.post("/api/contact", async (req, res) => {
   try {
     const { name, email, phone, message } = req.body || {};
-
     if (!name || !email || !message) {
-      return res.status(400).json({
-        ok: false,
-        error: "Missing required fields: name, email, message",
+      return res.status(400).json({ ok: false, error: "Missing required fields: name, email, message" });
+    }
+
+    const subject = `New contact form message from ${name}`;
+    const text = `
+From: ${name} <${email}>
+Phone: ${phone || "(not provided)"}
+
+Message:
+${message}
+    `.trim();
+
+    const html = `
+      <h2>New Contact Form Submission</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Phone:</strong> ${phone || "(not provided)"}</p>
+      <p><strong>Message:</strong></p>
+      <p>${String(message).replace(/\n/g, "<br>")}</p>
+    `;
+
+    const domain = process.env.MAILGUN_DOMAIN;
+    const fromEmail = process.env.FROM_EMAIL;
+    const toEmail = process.env.TO_EMAIL;
+
+    if (!domain || !fromEmail || !toEmail) {
+      return res.status(500).json({ ok: false, error: "Server email configuration missing (MAILGUN_DOMAIN, FROM_EMAIL, TO_EMAIL)." });
+    }
+
+    const mgResp = await mg.messages.create(domain, {
+      from: `VJMZ-FM <${fromEmail}>`,
+      to: toEmail,
+      subject,
+      text,
+      html,
+      "h:Reply-To": email,
+    });
+
+    if (mgResp && mgResp.id) {
+      return res.status(200).json({ ok: true, message: "Message sent" });
+    } else {
+      return res.status(502).json({ ok: false, error: "Mailgun did not return an id" });
+    }
+  } catch (err) {
+    console.error("Mailgun error:", err?.message || err);
+    return res.status(502).json({ ok: false, error: err?.message || "Failed to send" });
+  }
+});
+
       });
     }
 
