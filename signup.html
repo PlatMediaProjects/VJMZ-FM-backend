@@ -1,68 +1,75 @@
-<form id="signupForm" onsubmit="return false;">
-  <!-- your inputs ... -->
+<form id="signupForm" onsubmit="return handleSignup(event)">
+  <!-- Honeypot -->
+  <input type="text" name="company" style="display:none" tabindex="-1" autocomplete="off" />
+
+  <input type="text"  name="firstName" placeholder="First name" />
+  <input type="text"  name="lastName"  placeholder="Last name" />
+  <input type="email" name="email"     placeholder="Email" required />
+  <input type="text"  name="phone"     placeholder="Phone (optional)" />
+
+  <button type="submit" id="signupSubmitBtn">Sign Up</button>
 </form>
-<div id="signupStatus"></div>
+
+<div id="signupStatus" style="margin-top:.75rem;"></div>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+async function handleSignup(e) {
+  e.preventDefault(); // stop navigation (blank page)
   const form = document.getElementById('signupForm');
   const statusEl = document.getElementById('signupStatus');
 
-  if (!form) {
-    console.error('signupForm not found');
-    return;
-  }
-
-  // Safety: neutralize any residual action/method
+  // Belt-and-suspenders: neutralize any stray attributes from templates
   form.setAttribute('action', 'javascript:void(0)');
   form.setAttribute('method', 'get');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    statusEl && (statusEl.textContent = 'Sending…');
+  try {
+    statusEl.textContent = 'Sending…';
 
-    try {
-      // Collect values (adjust names if yours differ)
-      const first = (form.firstName?.value || '').trim();
-      const last  = (form.lastName?.value  || '').trim();
-      const email = (form.email?.value     || '').trim();
-      const phone = (form.phone?.value     || '').trim();
-
-      if (!email) {
-        statusEl.textContent = 'Please enter a valid email.';
-        return;
-      }
-
-      const payload = {
-        name: (first || last) ? `${first} ${last}`.trim() : email,
-        email,
-        phone,
-        message: 'Newsletter / Fan signup from signup.html'
-      };
-
-      console.log('Submitting to API with payload:', payload);
-
-      const res = await fetch('https://api.vjmz-fm.com/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        keepalive: true
-      });
-
-      const text = await res.text();
-      let data = {}; try { data = JSON.parse(text); } catch {}
-
-      console.log('API response status:', res.status, 'body:', text);
-
-      if (!res.ok) {
-        throw new Error(data.error || `HTTP ${res.status}`);
-      }
-
-      statusEl.textContent = '✅ Thank you! Your signup was received.';
-      form.reset();
-    } catch (err) {
-      console.error('Signup submit error:', err);
-      statusEl.textContent = '❌ Something went wrong. Please try again.';
+    // Honeypot
+    if (form.company && form.company.value.trim() !== '') {
+      statusEl.textContent = 'Blocked as spam.';
+      return false;
     }
-  });
-});
+
+    const first = (form.firstName?.value || '').trim();
+    const last  = (form.lastName?.value  || '').trim();
+    const email = (form.email?.value     || '').trim();
+    const phone = (form.phone?.value     || '').trim();
+
+    if (!email) {
+      statusEl.textContent = 'Please enter a valid email.';
+      return false;
+    }
+
+    const payload = {
+      name: (first || last) ? `${first} ${last}`.trim() : email,
+      email,
+      phone,
+      message: 'Newsletter / Fan signup from signup.html'
+    };
+
+    const res = await fetch('https://api.vjmz-fm.com/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true
+    });
+
+    const text = await res.text(); // capture any backend error text
+    let data = {}; try { data = JSON.parse(text); } catch {}
+
+    if (!res.ok) {
+      console.error('Signup POST failed', res.status, text);
+      statusEl.textContent = `Error (${res.status}). Please try again.`;
+      return false;
+    }
+
+    statusEl.textContent = '✅ Thank you! Your signup was received.';
+    form.reset();
+    return false; // keep page in place
+  } catch (err) {
+    console.error('Signup submit error:', err);
+    document.getElementById('signupStatus').textContent = '❌ Something went wrong. Please try again.';
+    return false;
+  }
+}
 </script>
