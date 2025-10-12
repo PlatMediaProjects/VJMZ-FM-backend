@@ -1,39 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Submit Advertising Agreement</title>
-</head>
-<body>
-  <h1>Submit Your Advertising Agreement</h1>
-  <form action="/submit-ad-agreement" method="POST" enctype="multipart/form-data">
-    <label>Full Name:<br>
-      <input type="text" name="name" required>
-    </label><br><br>
+<form id="radioAd30Form" novalidate>
+  <!-- Honeypot (spam trap) -->
+  <input type="text" name="company" style="display:none" tabindex="-1" autocomplete="off" />
 
-    <label>Email:<br>
-      <input type="email" name="email" required>
-    </label><br><br>
+  <h2>Radio Ad – 30 Second Spot</h2>
 
-    <label>Phone Number:<br>
-      <input type="tel" name="phone" required>
-    </label><br><br>
+  <label>
+    Business / Brand Name *
+    <input type="text" name="businessName" required />
+  </label>
 
-    <label>Creative Services Requested (Complimentary):<br>
-      <input type="checkbox" name="creative_services" value="Yes"> Yes
-    </label><br><br>
+  <label>
+    Contact Name *
+    <input type="text" name="contactName" required />
+  </label>
 
-    <label>Upload Ad Copy (MP3):<br>
-      <input type="file" name="adCopy" accept=".mp3">
-    </label><br><br>
+  <label>
+    Email *
+    <input type="email" name="email" required />
+  </label>
 
-    <label>Upload Bullet Points (Doc, PDF):<br>
-      <input type="file" name="bulletPoints" accept=".doc,.docx,.pdf">
-    </label><br><br>
+  <label>
+    Phone
+    <input type="tel" name="phone" />
+  </label>
 
-    <button type="submit">Proceed to Checkout</button>
-  </form>
-</body>
-</html>
+  <label>
+    Preferred Start Date
+    <input type="date" name="startDate" />
+  </label>
+
+  <label>
+    Notes / Script Direction
+    <textarea name="notes" rows="5" placeholder="Target audience, voice style, music bed, deadlines…"></textarea>
+  </label>
+
+  <label style="display:flex; gap:.5rem; align-items:flex-start;">
+    <input type="checkbox" name="agree" required />
+    <span>I agree to the <a href="/terms-broadcast-consent" target="_blank" rel="noopener">Broadcast Consent & Terms</a>.</span>
+  </label>
+
+  <button type="submit" id="submitBtn">Submit Details</button>
+
+  <!-- Hidden until submission succeeds -->
+  <div id="checkoutWrap" style="display:none; margin-top:1rem;">
+    <a id="checkoutBtn" class="checkout-button" href="#" target="_blank" rel="noopener">
+      Proceed to Checkout — <span id="priceLabel"></span>
+    </a>
+  </div>
+
+  <div id="radioAdStatus" aria-live="polite" style="margin-top:.75rem;"></div>
+</form> <script>
+(function () {
+  // ==== CONFIGURE THESE ====
+  const PRODUCT_NAME = "Radio Ad 30s Spot";
+  const SINGLE_TIER_PRICE_LABEL = "$199";      // what users see
+  const PAYMENT_LINK = "https://square.link/u/YOUR_PAYMENT_LINK"; // https://checkout.square.site/merchant/SFSCM5ZQJ2MDP/checkout/J5CXDJCOMISNWSQJG6E73O6A
+  // =========================
+
+  const form = document.getElementById('radioAd30Form');
+  const statusEl = document.getElementById('radioAdStatus');
+  const submitBtn = document.getElementById('submitBtn');
+  const checkoutWrap = document.getElementById('checkoutWrap');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  const priceLabel = document.getElementById('priceLabel');
+
+  if (!form) return;
+  priceLabel.textContent = SINGLE_TIER_PRICE_LABEL;
+
+  function disableForm(disabled) {
+    Array.from(form.elements).forEach(el => el.disabled = disabled);
+    submitBtn.disabled = disabled;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusEl.textContent = 'Sending…';
+    disableForm(true);
+
+    // Honeypot
+    if (form.company && form.company.value.trim() !== '') {
+      statusEl.textContent = 'Blocked as spam.';
+      disableForm(false);
+      return;
+    }
+
+    // Required basics (HTML5 handles most; this is just a friendly check)
+    if (!form.email.value || !form.businessName.value || !form.contactName.value || !form.agree.checked) {
+      statusEl.textContent = 'Please complete all required fields.';
+      disableForm(false);
+      return;
+    }
+
+    // Build a readable email body for your inbox
+    const lines = [
+      PRODUCT_NAME + " — Submission",
+      "--------------------------------",
+      `Business: ${form.businessName.value.trim()}`,
+      `Contact: ${form.contactName.value.trim()}`,
+      `Email: ${form.email.value.trim()}`,
+      `Phone: ${form.phone.value.trim() || "(not provided)"}`,
+      `Start Date: ${form.startDate.value || "(not provided)"}`,
+      "",
+      "Notes / Script Direction:",
+      (form.notes.value || "(none)").trim()
+    ];
+
+    const payload = {
+      name: `${form.contactName.value.trim()} (${form.businessName.value.trim()})`,
+      email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
+      message: lines.join('\n') + `\n\nSelected Product: ${PRODUCT_NAME}\nTier: ${SINGLE_TIER_PRICE_LABEL}\n[Source: Radio Ad 30s form]`
+    };
+
+    try {
+      // Send details to your backend (Mailgun sends the email)
+      const res = await fetch('https://api.vjmz-fm.com/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+
+      // Success: reveal checkout button
+      statusEl.textContent = '✅ Details received. Proceed to secure payment.';
+      checkoutBtn.href = addQuery(PAYMENT_LINK, {
+        // If your payment link supports query params, pass context:
+        ref: generateRef(),
+        product: PRODUCT_NAME,
+        email: form.email.value.trim()
+      });
+      checkoutWrap.style.display = 'block';
+
+      // OPTIONAL: auto-redirect to payment after a short pause
+      // setTimeout(() => window.open(checkoutBtn.href, '_blank'), 800);
+
+      // Keep the form filled until they click pay, or clear it:
+      // form.reset();
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = '❌ Sorry—something went wrong. Please try again.';
+      disableForm(false);
+      return;
+    }
+
+    disableForm(false);
+  });
+
+  function addQuery(url, params) {
+    try {
+      const u = new URL(url);
+      Object.entries(params).forEach(([k, v]) => {
+        if (v != null && String(v).trim() !== '') u.searchParams.set(k, v);
+      });
+      return u.toString();
+    } catch {
+      // If PAYMENT_LINK isn't a full URL, just return it untouched
+      return url;
+    }
+  }
+
+  function generateRef() {
+    // Simple client-side ref for your reconciliation (optional)
+    // e.g., RAD30-20251012-abcdef
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    const rand = Math.random().toString(36).slice(2,8);
+    return `RAD30-${y}${m}${day}-${rand}`;
+  }
+})();
+</script>
 
