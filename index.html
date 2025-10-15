@@ -259,7 +259,7 @@
 
     <section style="max-width: 600px; margin: 0 auto; padding: 2rem 1.5rem; text-align: center;">
       <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Sign Up for Exclusive Updates</h2>
-      <form action="#" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+      <form id="signupForm" onsubmit="return handleSignup(event)" style="display: flex; flex-direction: column; gap: 1rem;">
         <input type="text" name="name" placeholder="Your Name" required style="padding: 0.75rem; border-radius: 8px; border: none; background: #222; color: white;">
         <input type="email" name="email" placeholder="Your Email" required style="padding: 0.75rem; border-radius: 8px; border: none; background: #222; color: white;">
         <input type="tel" name="phone" placeholder="Your Mobile Number" required pattern="[0-9]{10}" title="Enter a valid 10-digit phone number" style="padding: 0.75rem; border-radius: 8px; border: none; background: #222; color: white;">
@@ -268,9 +268,69 @@
         </label>
         <button type="submit" style="padding: 0.75rem; border-radius: 8px; background-color: var(--burgundy); color: white; font-weight: bold; cursor: pointer; transition: background 0.3s ease;">
           Sign Me Up
-        </button>
+        </button> 
+        <div id="signupStatus" style="margin-top:.75rem;"></div>
       </form>
     </section>
+<script>
+async function handleSignup(e){
+  e.preventDefault(); // stop native navigation
+
+  const f   = document.getElementById('signupForm');
+  const s   = document.getElementById('signupStatus');
+  const btn = f.querySelector('[type="submit"]');
+
+  // guarantee no navigation
+  f.setAttribute('action','javascript:void(0)');
+  f.setAttribute('method','get');
+
+  // read your existing fields (do not rename)
+  const name  = (f.name ?.value || '').trim();
+  const email = (f.email?.value || '').trim();
+  const phone = (f.phone?.value || '').trim();
+  const sms   = !!(f.sms_optin && f.sms_optin.checked);
+
+  if (!email) { s.textContent = 'Please enter a valid email.'; return false; }
+
+  const payload = {
+    name: name || email,
+    email,
+    phone,
+    message: `Homepage signup (sms_optin=${sms})`
+  };
+
+  // UX: lock button + show progress
+  const savedText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  s.textContent = '';
+
+  try {
+    const r = await fetch('https://api.vjmz-fm.com/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true
+    });
+
+    const t = await r.text(); let j = {}; try { j = JSON.parse(t); } catch {}
+    if (!r.ok || j.ok !== true) throw new Error(j.error || `HTTP ${r.status}: ${t}`);
+
+    // ✅ success: show thank-you, then return home
+    s.textContent = '✅ Thank you! You’re all set.';
+    setTimeout(() => window.location.replace('/'), 3000);
+    // if you’d rather stay on the page, remove the setTimeout line above.
+
+  } catch (err) {
+    console.error('[signup submit]', err);
+    s.textContent = '❌ Sorry—something went wrong. Please try again.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = savedText;
+  }
+  return false; // never navigate via form
+}
+</script>
 
     <footer>
       <p>
