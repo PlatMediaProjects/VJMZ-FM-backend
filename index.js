@@ -93,7 +93,7 @@ ${message}`.trim();
       "h:Reply-To": email
     });
 
-    if (!mgResp || !mgResp.id) {
+    if (!mgResp || !mgResp.id) { 
       return res.status(502).json({ ok: false, error: "Mailgun did not return a message id" });
     }
 
