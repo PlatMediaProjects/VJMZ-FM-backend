@@ -1,59 +1,82 @@
-<form id="form" onsubmit="return handleSubmit(event)">
-<div id="status" style="margin-top:.75rem;"></div>
-// --- CONTACT ROUTE (improved diagnostics) ---
-app.post("/api/contact", async (req, res) => {
+<form id="signupForm" onsubmit="return handleSignup(event)">
+  <!-- Honeypot (spam trap) -->
+  <input type="text" name="company" style="display:none" tabindex="-1" autocomplete="off" />
+
+  <input type="text"  name="firstName" placeholder="First name" />
+  <input type="text"  name="lastName"  placeholder="Last name" />
+  <input type="email" name="email"     placeholder="Email" required />
+  <input type="text"  name="phone"     placeholder="Phone (optional)" />
+
+  <button type="submit" id="signupBtn">Sign Up</button>
+  <div id="status" style="margin-top:.75rem;"></div>
+</form>
+
+<script>
+async function handleSignup(e){
+  e.preventDefault();
+
+  const form = document.getElementById('signupForm');
+  const btn  = document.getElementById('signupBtn');
+  const msg  = document.getElementById('status');
+
+  // Belt-and-suspenders: ensure the form never navigates
+  form.setAttribute('action', 'javascript:void(0)');
+  form.setAttribute('method', 'get');
+
+  // Honeypot
+  if (form.company && form.company.value.trim() !== '') {
+    msg.textContent = 'Blocked as spam.';
+    return false;
+  }
+
+  const first = (form.firstName?.value || '').trim();
+  const last  = (form.lastName ?.value || '').trim();
+  const email = (form.email    ?.value || '').trim();
+  const phone = (form.phone    ?.value || '').trim();
+
+  if (!email) {
+    msg.textContent = 'Please enter a valid email.';
+    return false;
+  }
+
+  const payload = {
+    name: (first || last) ? `${first} ${last}`.trim() : email,
+    email,
+    phone,
+    message: 'Signup form submission (signup.html)'
+  };
+
+  // UX
+  const saved = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  msg.textContent = '';
+
   try {
-    const { name, email, phone, message } = req.body || {};
-    if (!name || !email || !message) {
-      return res.status(400).json({ ok: false, error: "Missing required fields: name, email, message" });
-    }
-
-    const subject = `New contact form message from ${name}`;
-    const text = `
-From: ${name} <${email}>
-Phone: ${phone || "(not provided)"}
-
-Message:
-${message}
-    `.trim();
-    const html = `
-      <h2>New Contact Form Submission</h2>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Phone:</strong> ${phone || "(not provided)"}</p>
-      <p><strong>Message:</strong></p>
-      <p>${String(message).replace(/\n/g, "<br>")}</p>
-    `;
-
-    const domain = process.env.MAILGUN_DOMAIN;
-    const fromEmail = process.env.FROM_EMAIL;
-    const toEmail = process.env.TO_EMAIL;
-
-    // Basic sanity checks
-    if (!domain || !fromEmail || !toEmail) {
-      return res.status(500).json({ ok: false, error: "Server email configuration missing (env vars)." });
-    }
-
-    const mgResp = await mg.messages.create(domain, {
-      from: `VJMZ-FM <${fromEmail}>`,
-      to: toEmail,
-      subject,
-      text,
-      html,
-      "h:Reply-To": email
+    const res = await fetch('https://api.vjmz-fm.com/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true
     });
 
-    // If Mailgun returns id, we’re good
-    if (mgResp && mgResp.id) {
-      return res.status(200).json({ ok: true, message: "Message sent" });
-    } else {
-      return res.status(502).json({ ok: false, error: "Mailgun accepted no id response" });
-    }
-  } catch (err) {
-    // Expose Mailgun error message to client for debugging (safe enough here)
-    const msg = err?.message || String(err);
-    console.error("Mailgun error:", msg);
-    return res.status(502).json({ ok: false, error: msg });
-  }
-});
+    const text = await res.text();
+    let data = {}; try { data = JSON.parse(text); } catch {}
 
+    if (!res.ok || data.ok !== true) {
+      throw new Error(data.error || `HTTP ${res.status}: ${text}`);
+    }
+
+    msg.textContent = '✅ Thanks! Your signup was received.';
+    form.reset();
+  } catch (err) {
+    console.error('[signup submit]', err);
+    msg.textContent = '❌ Sorry—something went wrong. Please try again.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = saved;
+  }
+
+  return false; // never navigate
+}
+</script>
